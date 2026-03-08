@@ -1,4 +1,3 @@
-import { Admin } from 'src/admins/entities/admin.entity';
 import { AbstractBaseEntity } from 'src/common/entities/abstract-base.entity';
 import { SubCategory } from 'src/sub_categories/entities/sub_category.entity';
 import {

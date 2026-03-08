@@ -9,7 +9,7 @@ import { SubCategoriesModule } from './sub_categories/sub_categories.module';
 import { UnitsModule } from './units/units.module';
 import { ProductsModule } from './products/products.module';
 import { ProductImagesModule } from './product_images/product_images.module';
-import { SizedModule } from './sized/sized.module';
+import { SizesModule } from './sizes/sizes.module';
 import { ProductVariantsModule } from './product_variants/product_variants.module';
 import { ProductReviewsModule } from './product_reviews/product_reviews.module';
 import { AuthModule } from './common/auth/module/auth.module';
@@ -43,7 +43,7 @@ import { SeederModule } from './common/seeders/seeder.module';
     UnitsModule,
     ProductsModule,
     ProductImagesModule,
-    SizedModule,
+    SizesModule,
     ProductVariantsModule,
     ProductReviewsModule,
     AuthModule,

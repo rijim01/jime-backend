@@ -4,10 +4,11 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
-import { Admin } from 'src/admins/entities/admin.entity';
 import { AbstractBaseEntity } from 'src/common/entities/abstract-base.entity';
+import { Product } from 'src/products/entities/product.entity';
 
 @Entity('jime_sub_categories') 
 export class SubCategory extends AbstractBaseEntity {
@@ -18,7 +19,7 @@ export class SubCategory extends AbstractBaseEntity {
   @JoinColumn({ name: 'category_id' })
   category: Category;
 
-  @Column()
+  @Column({name: 'category_id'})
   categoryId: number; 
 
   @Column()
@@ -27,6 +28,6 @@ export class SubCategory extends AbstractBaseEntity {
   @Column({ unique: true })
   slug: string;
 
-  @Column({ name: 'created_by', nullable: true })
-  createdBy: number;
+  @OneToMany(() => Product, (product) => product.subCategory)
+  products: Product[];
 }
