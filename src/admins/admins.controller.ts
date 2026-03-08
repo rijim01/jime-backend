@@ -8,13 +8,18 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/auth/guard/jwt-auth.guard';
+import { CurrentUser } from 'src/common/auth/decorator/current-user-decorator';
 
+
+@ApiBearerAuth('access-token')
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
@@ -48,8 +53,14 @@ export class AdminsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'find all admins'})
-  async findAll() {
+  @ApiOperation({ summary: 'find all active admins'})
+  async findAllActiveAdmins() {
+    return await this.adminsService.findAll();
+  }
+
+  @Get()
+  @ApiOperation({summary: 'find all admins'})
+  async findAllAdmins() {
     return await this.adminsService.findAll();
   }
 
@@ -62,12 +73,13 @@ export class AdminsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT) 
   @ApiOperation({ summary: 'Delete an admin' })
   @ApiResponse({ status: 204, description: 'Admin deleted successfully.' })
   @ApiResponse({ status: 404, description: 'Admin not found.' })
-  async softDelete(@Param('id') id: string) {
-    return await this.adminsService.softDelete(+id);
+  async remove(@Param('id') id: string, @CurrentUser() user: any) {
+    return await this.adminsService.softDelete(+id,user);
   }
 
 }

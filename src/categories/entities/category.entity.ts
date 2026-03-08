@@ -5,8 +5,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   OneToMany,
 } from 'typeorm';
 
@@ -22,7 +20,7 @@ export class Category extends AbstractBaseEntity {
   slug: string;
 
   @Column({ nullable: true })
-  imageUrl: string;
+  imageUrl?: string;
 
   @OneToMany(() => SubCategory, (sub) => sub.category)
   subCategories: SubCategory[];

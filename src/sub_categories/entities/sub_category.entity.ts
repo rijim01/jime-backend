@@ -29,9 +29,4 @@ export class SubCategory extends AbstractBaseEntity {
 
   @Column({ name: 'created_by', nullable: true })
   createdBy: number;
-
-  @ManyToOne(() => Admin)
-  @JoinColumn({name: 'created_by'})
-  creator: Admin;
-
 }
