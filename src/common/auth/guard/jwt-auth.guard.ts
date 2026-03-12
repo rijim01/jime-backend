@@ -5,15 +5,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RolesService } from 'src/roles/roles.service';
-import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly rolesService: RolesService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -27,31 +24,11 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const decoded = this.jwtService.verify(token);
       
-      if (decoded.roleId) {
-        const role = await this.rolesService.findOne(decoded.roleId);
-        
-        if (role) {
-          request.user = {
-            sub: decoded.sub,
-            email: decoded.email,
-            roleId: decoded.roleId,
-            role: role.name,
-            permissions: role.permissions,
-          };
-        } else {
-          request.user = {
-            sub: decoded.sub,
-            email: decoded.email,
-            role: decoded.role,
-          };
-        }
-      } else {
-        request.user = {
+       request.user = {
           sub: decoded.sub,
           email: decoded.email,
           role: decoded.role,
         };
-      }
       
       return true;
     } catch (error) {

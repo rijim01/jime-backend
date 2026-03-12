@@ -23,14 +23,14 @@ export class Customer extends AbstractBaseEntity {
 
   @Exclude()
   @Column({ select: false }) 
-  passwordHash: string;
+  password: string;
 
   @Column({ type: 'text', nullable: true })
   address: string;
 
-  @Column({ name: 'is_verified', default: false })
-  isVerified: boolean;
+  @Column({ default: false })
+  is_verified: boolean;
 
-  @Column({ name: 'avatar_url', nullable: true })
-  avatarUrl: string;
+  @Column({ nullable: true })
+  avatar_url: string;
 }

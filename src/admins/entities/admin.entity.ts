@@ -1,18 +1,24 @@
 import { Exclude } from 'class-transformer';
 import { AbstractBaseEntity } from 'src/common/entities/abstract-base.entity';
-import { Role } from 'src/roles/entities/role.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+export enum ROLE {
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin',
+  MANAGER = 'manager',
+}
 
 @Entity('jime_admins')
 export class Admin extends AbstractBaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    type: 'enum',
+    enum: ROLE,
+    default: ROLE.ADMIN,
+  })
+  role: ROLE;
 
   @Column()
   name: string;
@@ -24,13 +30,6 @@ export class Admin extends AbstractBaseEntity {
   @Column({ select: false })
   passwordHash: string;
 
-  @Column()
-  roleId: number;
-
-  @ManyToOne(() => Role, (role) => role.admins)
-  @JoinColumn({ name: 'roleId' })
-  role: Role;
-
   @Column({ type: 'timestamp', nullable: true })
-  lastLogin: Date;
+  last_login: Date;
 }

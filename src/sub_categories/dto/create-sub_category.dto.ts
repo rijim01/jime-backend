@@ -14,7 +14,7 @@ export class CreateSubCategoryDto {
   @ApiProperty({ description: 'The ID of the parent category' })
   @IsNotEmpty({ message: 'Category ID is required' })
   @IsNumber()
-  categoryId: number;
+  category_id: number;
 
   @ApiPropertyOptional({ description: 'URL for the sub-category image' })
   @IsOptional()

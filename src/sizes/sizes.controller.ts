@@ -29,37 +29,4 @@ export class SizesController {
   async create(@Body() createSizesDto: CreateSizesDto) {
     return await this.sizesService.create(createSizesDto);
   }
-
-  @Get()
-  @ApiOperation({ summary: 'Retrieve all sizes (Optionally filtered by categoryId)' })
-  @ApiQuery({ name: 'categoryId', required: false, type: Number })
-  async findAll(@Query('categoryId') categoryId?: string) {
-    return await this.sizesService.findAll(categoryId ? +categoryId : undefined);
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get details of a specific size' })
-  async findOne(@Param('id') id: string) {
-    return await this.sizesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Update an existing size' })
-  async update(
-    @Param('id') id: string, 
-    @Body() updateSizesDto: UpdateSizesDto
-  ) {
-    return await this.sizesService.update(+id, updateSizesDto);
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('access-token')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Soft delete a size' })
-  async remove(@Param('id') id: string) {
-    return await this.sizesService.remove(+id);
-  }
 }

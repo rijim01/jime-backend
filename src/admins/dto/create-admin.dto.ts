@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateAdminDto {
@@ -17,13 +17,4 @@ export class CreateAdminDto {
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   @IsString()
   password: string;
-
-  @ApiProperty({
-    example: 1,
-    description: 'The unique ID of the role assigned to this admin',
-    required: false
-  })
-  @IsNotEmpty({ message: 'Role ID is required' })
-  @IsNumber() 
-  roleId?: number;
 }

@@ -39,7 +39,7 @@ export class CustomersService {
     const newCustomer = this.customerRepository.create({
       ...customerData,
       email,
-      passwordHash,
+      password: passwordHash,
     });
 
     const savedCustomer = await this.customerRepository.save(newCustomer);
@@ -56,7 +56,7 @@ export class CustomersService {
     const { email, password } = loginCustomerDto;
     const customer = await this.customerRepository.findOne({
       where: { email },
-      select: ['id', 'name', 'email', 'passwordHash'],
+      select: ['id', 'name', 'email', 'password'],
     });
 
     if (!customer) {
@@ -65,7 +65,7 @@ export class CustomersService {
 
     const isPasswordValid = await bcrypt.compare(
       password,
-      customer.passwordHash,
+      customer.password,
     );
 
     if (!isPasswordValid) {

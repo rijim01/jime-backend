@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RolesModule } from './roles/roles.module';
 import { AdminsModule } from './admins/admins.module';
 import { CustomersModule } from './customers/customers.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -13,8 +12,10 @@ import { SizesModule } from './sizes/sizes.module';
 import { ProductVariantsModule } from './product_variants/product_variants.module';
 import { ProductReviewsModule } from './product_reviews/product_reviews.module';
 import { AuthModule } from './common/auth/module/auth.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { SeederModule } from './common/seeders/seeder.module';
+import { ColorModule } from './color/color.module';
+import { CustomerProfileModule } from './customer_profile/customer_profile.module';
+import { VariantImagesModule } from './variant_images/variant_images.module';
+import { UploadModule } from './common/upload/upload.module';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { SeederModule } from './common/seeders/seeder.module';
         synchronize: true, // false in production
       })
     }),
-    RolesModule,
+    UploadModule,
     AdminsModule,
     CustomersModule,
     CategoriesModule,
@@ -47,8 +48,9 @@ import { SeederModule } from './common/seeders/seeder.module';
     ProductVariantsModule,
     ProductReviewsModule,
     AuthModule,
-    PermissionsModule,
-    SeederModule
+    ColorModule,
+    CustomerProfileModule,
+    VariantImagesModule,
   ],
 })
 export class AppModule {}

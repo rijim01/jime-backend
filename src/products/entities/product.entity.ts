@@ -1,8 +1,7 @@
+import { Category } from "src/categories/entities/category.entity";
 import { AbstractBaseEntity } from "src/common/entities/abstract-base.entity";
-import { ProductVariant } from "src/product_variants/entities/product_variant.entity";
-import { SubCategory } from "src/sub_categories/entities/sub_category.entity";
-import { Unit } from "src/units/entities/unit.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ProductImage } from "src/product_images/entities/product_image.entity";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('jime_products')
 export class Product extends AbstractBaseEntity {
@@ -11,28 +10,19 @@ export class Product extends AbstractBaseEntity {
   id: number;
 
   @Column()
+  subcategory: string;
+
+  @Column()
   name: string;
 
   @Column({ unique: true })
   slug: string;
 
-  @Column('text')
+  @Column('text') 
   description: string;
 
-  @ManyToOne(() => SubCategory, (sub) => sub.products)
-  @JoinColumn({ name: 'sub_category_id' })
-  subCategory: SubCategory;
-
-  @Column({ name: 'sub_category_id' })
-  subCategoryId: number;;
-
-  @ManyToOne(() => Unit)
-  @JoinColumn({ name: 'unit_id' })
-  unit: Unit;
-
-  @Column({ name: 'unit_id' })
-  unitId: number;
-
-  @OneToMany(() => ProductVariant, (variant) => variant.product)
-  variants: ProductVariant[];
+  @OneToMany(() => ProductImage, image => image.product,{
+    cascade: true
+  })
+  images: ProductImage[];
 }

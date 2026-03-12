@@ -16,9 +16,11 @@ export class SubCategoriesService {
 
   async create(createSubCategoryDto: CreateSubCategoryDto) {
     const slug = slugify(createSubCategoryDto.name, { lower: true, strict: true });
-    const categoryId = createSubCategoryDto.categoryId;
+
+    const category_id = createSubCategoryDto.category_id;
+    
     const existing = await this.subCategoryRepository.findOne({
-      where: { slug, categoryId },
+      where: { slug, category_id },
     });
 
     if (existing) {
@@ -31,11 +33,6 @@ export class SubCategoriesService {
     });
 
     return await this.subCategoryRepository.save(subCategory);
-  }
-
-  async findAll(categoryId?: number) {
-    const where = categoryId ? { categoryId } : {};
-    return await this.subCategoryRepository.find({ where, relations: ['category'] });
   }
 
   async findOne(id: number) {

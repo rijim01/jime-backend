@@ -14,7 +14,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from 'src/common/auth/service/auth.service';
 import { LoginAdminDto } from './dto/login-admin.dto';
-import { RolesService } from 'src/roles/roles.service';
+
 import {
   ApiResponse,
   saltRounds,
@@ -28,14 +28,13 @@ export class AdminsService {
   constructor(
     @InjectRepository(Admin)
     private readonly adminRepository: Repository<Admin>,
-    private readonly roleService: RolesService,
     private readonly authService: AuthService,
   ) {}
 
   async create(
     createAdminDto: CreateAdminDto,
   ): Promise<ApiResponse<AuthAdminResponse>> {
-    const { password, email, roleId, ...adminData } = createAdminDto;
+    const { password, email, ...adminData } = createAdminDto;
 
     const existingAdmin = await this.adminRepository.findOne({
       where: { email },
@@ -45,11 +44,6 @@ export class AdminsService {
       throw new ConflictException('Admin with this email already exists');
     }
 
-    if (!roleId) {
-      throw new BadRequestException('Role ID is required to create an admin');
-    }
-
-    const role = await this.roleService.findOne(roleId);
 
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -57,8 +51,6 @@ export class AdminsService {
       ...adminData,
       email,
       passwordHash,
-      role,
-      roleId,
     });
 
     const savedAdmin = await this.adminRepository.save(newAdmin);
@@ -66,8 +58,7 @@ export class AdminsService {
     const payload = {
       sub: savedAdmin.id,
       email: savedAdmin.email,
-      role: savedAdmin.role.name,
-      roleId: savedAdmin.roleId,
+      role: savedAdmin.role
     };
     const accessToken = this.authService.generateToken(payload);
 
@@ -89,7 +80,6 @@ export class AdminsService {
     const admin = await this.adminRepository.findOne({
       where: { email },
       select: ['id', 'name', 'email', 'passwordHash'],
-      relations: ['role', 'role.permissions'],
     });
 
     if (!admin) {
@@ -105,7 +95,7 @@ export class AdminsService {
     const payload = {
       sub: admin.id,
       email: admin.email,
-      role: admin.role?.name,
+      role: admin.role
     };
 
     const accessToken = this.authService.generateToken(payload);
@@ -147,7 +137,6 @@ export class AdminsService {
     if (!admin) {
       throw new NotFoundException('Admin not found');
     }
-
     if (updateAdminDto.email && updateAdminDto.email !== admin.email) {
       const existingAdmin = await this.adminRepository.findOne({
         where: { email: updateAdminDto.email, status: Status.ACTIVE },
@@ -157,20 +146,6 @@ export class AdminsService {
         throw new ConflictException('Email is already taken by another admin');
       }
     }
-    if (updateAdminDto.password) {
-      updateAdminDto.password = await bcrypt.hash(
-        updateAdminDto.password,
-        saltRounds,
-      );
-    }
-
-    if (updateAdminDto.password) {
-      updateAdminDto.password = await bcrypt.hash(
-        updateAdminDto.password,
-        saltRounds,
-      );
-    }
-
     Object.assign(admin, updateAdminDto);
     return await this.adminRepository.save(admin);
   }
@@ -192,7 +167,6 @@ export class AdminsService {
       );
     }
     admin.status = Status.INACTIVE;
-    admin.deletedBy = currentUser.sub;
     await this.adminRepository.save(admin);
 
     return {success: true, message: 'Admin soft-deleted successfully'};

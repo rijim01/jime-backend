@@ -20,18 +20,12 @@ export abstract class AbstractBaseEntity {
   })
   status: Status;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  @CreateDateColumn()
+  created_at: Date;
 
-  @Column({ name: 'updated_by', nullable: true })
-  updatedBy?: number; 
+  @UpdateDateColumn()
+  updated_at: Date;
 
-  @Column({ name: 'deleted_by', nullable: true })
-  deletedBy?: number; 
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  @DeleteDateColumn()
+  deleted_at: Date;
 }

@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Unit } from './entities/unit.entity';
 import { CreateUnitDto } from './dto/create-unit.dto';
-import { UpdateUnitDto } from './dto/update-unit.dto';
 
 @Injectable()
-export class UnitsService {
-  create(createUnitDto: CreateUnitDto) {
-    return 'This action adds a new unit';
+export class UnitService {
+  constructor(
+    @InjectRepository(Unit)
+    private unitRepository: Repository<Unit>,
+  ) {}
+
+  async create(dto: CreateUnitDto) {
+    const name = dto.name;
+    const existingUnit = await this.unitRepository.findOne({
+      where: {
+        name
+      },
+    });
+
+    if (existingUnit) {
+      throw new ConflictException('Unit  already exists');
+    }
+
+    const newUnit = this.unitRepository.create(dto);
+    return await this.unitRepository.save(newUnit);
   }
 
   findAll() {
-    return `This action returns all units`;
+    return this.unitRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} unit`;
-  }
-
-  update(id: number, updateUnitDto: UpdateUnitDto) {
-    return `This action updates a #${id} unit`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} unit`;
+  async remove(id: number) {
+    const unit = await this.unitRepository.findOneBy({ id });
+    if (!unit) throw new NotFoundException('Unit not found');
+    return this.unitRepository.remove(unit);
   }
 }

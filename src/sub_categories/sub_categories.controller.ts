@@ -30,13 +30,6 @@ export class SubCategoriesController {
     return await this.subCategoriesService.create(createSubCategoryDto);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all sub-categories (Optional: Filter by categoryId)' })
-  @ApiQuery({ name: 'categoryId', required: false, type: Number })
-  async findAll(@Query('categoryId') categoryId?: string) {
-    return await this.subCategoriesService.findAll(categoryId ? +categoryId : undefined);
-  }
-
   @Get(':id')
   @ApiOperation({ summary: 'Get a sub-category by id' })
   async findOne(@Param('id') id: string) {
